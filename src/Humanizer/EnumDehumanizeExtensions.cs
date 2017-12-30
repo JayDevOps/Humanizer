@@ -69,6 +69,5 @@ namespace Humanizer
             }
             return success;
         }
-
     }
 }
