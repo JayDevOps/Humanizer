@@ -144,6 +144,8 @@ namespace Humanizer
         public static TTargetEnum DehumanizeTo<TTargetEnum>(this string input)
             where TTargetEnum :  struct, System.IComparable, System.IFormattable { }
         public static System.Enum DehumanizeTo(this string input, System.Type targetEnum, Humanizer.OnNoMatch onNoMatch = 0) { }
+        public static bool TryDehumanizeTo<TTargetEnum>(this string input, out TTargetEnum output)
+            where TTargetEnum :  struct, System.IComparable, System.IFormattable { }
     }
     public class static EnumHumanizeExtensions
     {

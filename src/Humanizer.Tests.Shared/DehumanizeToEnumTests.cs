@@ -25,6 +25,23 @@ namespace Humanizer.Tests
             Assert.Null(EnumTestsResources.MemberWithDescriptionAttribute.DehumanizeTo(typeof(DummyEnum), OnNoMatch.ReturnsNull));
         }
 
+        [Fact]
+        public void ReturnsFalseForNonEnums()
+        {
+            DummyStructWithEnumInterfaces attrib = default(DummyStructWithEnumInterfaces);
+            bool success = EnumTestsResources.MemberWithDescriptionAttribute.TryDehumanizeTo<DummyStructWithEnumInterfaces>(out attrib);
+            Assert.False(success);
+        }
+
+        [Fact]
+        public void ReturnsFalseForEnumNoMatch()
+        {
+            DummyEnum attrib = default(DummyEnum);
+            bool success = EnumTestsResources.MemberWithDescriptionAttribute.TryDehumanizeTo<DummyEnum>(out attrib);
+            Assert.False(success);
+        }
+
+
 #if !NETFX_CORE
         [Fact]
         public void HonorsDescriptionAttribute()
@@ -40,6 +57,26 @@ namespace Humanizer.Tests
             Assert.Equal(EnumUnderTest.MemberWithDescriptionAttributeSubclass, calculatedDescription.DehumanizeTo<EnumUnderTest>());
             Assert.Equal(EnumUnderTest.MemberWithDescriptionAttributeSubclass, calculatedDescription.DehumanizeTo(typeof(EnumUnderTest)));
         }
+
+        [Fact]
+        public void ReturnsTrueHonorsDescriptionAttribute()
+        {
+            EnumUnderTest test = default(EnumUnderTest);
+            bool success = EnumTestsResources.MemberWithDescriptionAttribute.TryDehumanizeTo<EnumUnderTest>(out test);
+            Assert.True(success);
+            Assert.Equal(EnumUnderTest.MemberWithDescriptionAttribute, test);
+        }
+
+        [Fact]
+        public void ReturnsTrueHonorsDescriptionAttributeSubclasses()
+        {
+            const string calculatedDescription = "Overridden " + EnumTestsResources.MemberWithDescriptionAttributeSubclass;
+            EnumUnderTest test = default(EnumUnderTest);
+            bool success = calculatedDescription.TryDehumanizeTo<EnumUnderTest>(out test);
+            Assert.True(success);
+            Assert.Equal(EnumUnderTest.MemberWithDescriptionAttributeSubclass, test);
+        }
+
 #endif
 
         [Fact]

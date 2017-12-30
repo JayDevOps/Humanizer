@@ -42,8 +42,33 @@ namespace Humanizer
 
             if (match == null && onNoMatch == OnNoMatch.ThrowsException)
                 throw new NoMatchFoundException("Couldn't find any enum member that matches the string " + input);
-
             return match;
         }
+
+        /// <summary>
+        /// Dehumanizes a string into the Enum it was originally Humanized from!;
+        /// If not found the output value is default enumvalue
+        /// </summary>
+        /// <typeparam name="TTargetEnum">The target enum</typeparam>
+        /// <param name="input">The string to be converted</param>
+        /// <param name="output">The enum value of dehumanized string.</param>
+        /// <returns>returns boolean false if no match found, true if match found</returns>
+        public static bool TryDehumanizeTo<TTargetEnum>(this string input, out TTargetEnum output)
+            where TTargetEnum : struct, IComparable, IFormattable
+        {
+            bool success=false;
+            try
+            {
+                output = (TTargetEnum)DehumanizeToPrivate(input, typeof(TTargetEnum), OnNoMatch.ThrowsException);
+                success = true;
+            }
+            catch
+            {
+                output = default(TTargetEnum);
+                return success;
+            }
+            return success;
+        }
+
     }
 }
